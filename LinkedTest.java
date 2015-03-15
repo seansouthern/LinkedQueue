@@ -1,9 +1,8 @@
 
-
 public class LinkedTest
 {
 
-	public static void main(String args[]) throws LinkedQueue.UnderflowException
+	public static void main(String args[]) throws LinkedQueue.UnderflowException, LinkedQueue.OverflowException
 	{
 
 		//Test unlimited size
@@ -15,10 +14,14 @@ public class LinkedTest
 		String nodeData4 = "Test4";
 
 
-		testQueue.enqueue(nodeData1);		
+		testQueue.enqueue(nodeData1);
+		System.out.println(testQueue.size() + " is the size");
 		testQueue.enqueue(nodeData2);
+		System.out.println(testQueue.size() + " is the size");
 		testQueue.enqueue(nodeData3);
+		System.out.println(testQueue.size() + " is the size");
 		testQueue.enqueue(nodeData4);
+		System.out.println(testQueue.size() + " is the size");
 		showQueue(testQueue);
 		
 		testQueue.dequeue();

@@ -22,22 +22,23 @@ public class LinkedQueue
 	public Node tail;
 	public int capacity;
 
-
+	// If the passed Size is zero, the queue can be of infinite length
 	public LinkedQueue(int inSize)
 	{
 		capacity = inSize;
 
-
 	}
 
-	public void enqueue(Object payload)
+	public void enqueue(Object payload) throws OverflowException
 	{
 		// Couple things, we need to preserve the link order
 		// Still unsure if we actually need the prev attribute
 		// preserve the tail, insert the payload
 		// New tail points to old tail
 		// Old tail keeps it's old pointer
-		if(tail != null)
+		// We will not enqueue beyond the declared capacity of the queue
+		// unless it is an infinite queue (a queue of 0 size is infinite here)
+		if(tail != null && size() < capacity || size() == 0)
 		{
 			// If tail.next isn't null we have a populated list that we must shift around
 			if(tail.next != null)
@@ -72,6 +73,10 @@ public class LinkedQueue
 			head = tail;
 
 		}
+		else if(size() > capacity && size() != 0)
+		{
+			throw new OverflowException();
+		}
 	}
 
 
@@ -93,7 +98,7 @@ public class LinkedQueue
 				Node oldHead = head;
 				head = null;
 				tail = null;
-				
+
 				return oldHead.getData();
 			}
 		}
@@ -112,7 +117,26 @@ public class LinkedQueue
 
 	public int size()
 	{
-		return 0;
+		// Walk through the queue, incrementing at every node
+		int size = 1;
+
+		// If the tail is null we know the queue is empty
+		if(tail != null)
+		{
+			Node currentNode = tail;
+			while(currentNode.next != null)
+			{
+				size++;
+				currentNode = currentNode.next;
+
+			}
+		}
+		else
+		{
+			System.out.println("tail is null");
+			return 0;
+		}
+		return size;
 	}
 
 
@@ -123,6 +147,14 @@ public class LinkedQueue
 			super("The queue is empty!");
 		}
 	}
+	public class OverflowException extends Exception
+	{
+		public OverflowException()
+		{
+			super("The queue is full!");
+		}
+	}
+
 
 	public class Node
 	{
