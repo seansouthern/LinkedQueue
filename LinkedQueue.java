@@ -27,11 +27,7 @@ public class LinkedQueue
 	{
 		capacity = inSize;
 
-		head = new Node();
-		head.prev = tail;
-		
-		tail = new Node();
-		tail.next = head;
+
 	}
 
 	public void enqueue(Object payload)
@@ -41,34 +37,71 @@ public class LinkedQueue
 		// preserve the tail, insert the payload
 		// New tail points to old tail
 		// Old tail keeps it's old pointer
-		if(tail.next != null)
+		if(tail != null)
 		{
-			Node oldTail = tail;
-			tail = new Node(payload);
+			// If tail.next isn't null we have a populated list that we must shift around
+			if(tail.next != null)
+			{
+				Node oldTail = tail;
+				tail = new Node(payload);
 
-			tail.next = oldTail;
-			tail.next.prev = tail;
+				tail.next = oldTail;
+				tail.next.prev = tail;
+				tail.next.next = oldTail.next;
+			}
+
+			// If tail.next is null that means we are in a zero or one element list
+			// We need to create the proper structure as we insert
+			if(tail.next == null)
+			{
+				Node oldTail = tail;
+				tail = new Node(payload);
+
+				tail.next = oldTail;
+				tail.next.prev = tail;
+				tail.next.next = null;
+
+				head = tail.next;
+			}
 		}
-		// If tail.next is null that means we are in a zero element list
-		// This needs to be thought through
-		else
+		else if (tail == null)
 		{
 			tail = new Node(payload);
+			tail.next = null;
+			tail.prev = null;
+			head = tail;
+
 		}
-		
 	}
 
-	public Object dequeue()
+
+	public Object dequeue() throws UnderflowException
 	{
-		Node oldHead = head;
-		if(head == null)System.out.println("it's null");
-		
-		head = head.prev;
-		System.out.println(head.getData().toString());
-		head.next = null;
-		System.out.println(head.next.toString());
-		
-		return oldHead.getData();
+		if(head != null)
+		{
+			if(head.prev != null)
+			{
+				Node oldHead = head;
+
+				head = head.prev;
+				head.next = null;
+
+				return oldHead.getData();
+			}
+			else if(head.prev == null)
+			{
+				Node oldHead = head;
+				head = null;
+				tail = null;
+				
+				return oldHead.getData();
+			}
+		}
+		else
+		{
+			throw new UnderflowException();
+		}
+		return null;
 	}
 
 	public boolean isEmpty()
@@ -83,24 +116,32 @@ public class LinkedQueue
 	}
 
 
+	public class UnderflowException extends Exception
+	{
+		public UnderflowException()
+		{
+			super("The queue is empty!");
+		}
+	}
+
 	public class Node
 	{
 		public Object data;
 		public Node next;
 		public Node prev;
-		
+
 		public Node()
 		{
 			next = null;
 			prev = null;
 			data = null;
 		}
-		
+
 		public String toString()
 		{
 			return data.toString();
 		}
-		
+
 		public Node(Object inData)
 		{
 			setData(inData);

@@ -1,7 +1,9 @@
+
+
 public class LinkedTest
 {
 
-	public static void main(String args[])
+	public static void main(String args[]) throws LinkedQueue.UnderflowException
 	{
 
 		//Test unlimited size
@@ -21,10 +23,16 @@ public class LinkedTest
 		
 		testQueue.dequeue();
 		testQueue.dequeue();
+		testQueue.dequeue();
+		testQueue.dequeue();
+		testQueue.dequeue();
 		
 		System.out.println();
 		
 		showQueue(testQueue);
+		
+		System.out.println(testQueue.head + " is the final head");
+		System.out.println(testQueue.tail + " is the final tail");
 	}
 
 
@@ -32,7 +40,7 @@ public class LinkedTest
 	{
 		LinkedQueue.Node currentNode = testQueue.tail;
 
-		while(currentNode != null && currentNode.data != null && currentNode.next != null)
+		while(currentNode != null)
 		{
 			System.out.println(currentNode.toString() + " is the currentnode payload");
 			
@@ -54,11 +62,11 @@ public class LinkedTest
 			else
 			{
 				System.out.println(currentNode.toString() + " next pointer is null");
-				return;
 			}
 			currentNode = currentNode.next;
 		}
-
+		
+		System.out.println("Finished printing!");
 	}
 
 
